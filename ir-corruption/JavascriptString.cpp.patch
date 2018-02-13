@@ -1,0 +1,31 @@
+diff --git a/lib/Runtime/Library/JavascriptString.cpp b/lib/Runtime/Library/JavascriptString.cpp
+index 0db870d..d6ab50c 100644
+--- a/lib/Runtime/Library/JavascriptString.cpp
++++ b/lib/Runtime/Library/JavascriptString.cpp
+@@ -1935,6 +1935,9 @@ case_2:
+             }
+         }
+ 
++		if (idxStart == 1337)
++			Output::Print(_u("DEBUG: %ls\n"), pThis->GetString());
++
+         idxStart = min(max(idxStart, 0), len);
+         idxEnd = min(max(idxEnd, 0), len);
+         if(idxEnd < idxStart)
+@@ -1950,7 +1953,6 @@ case_2:
+             //return the string if we need to substring entire span
+             return pThis;
+         }
+-
+         return SubstringCore(pThis, idxStart, idxEnd - idxStart, scriptContext);
+     }
+ 
+@@ -1968,6 +1970,8 @@ case_2:
+ 
+         int len = pThis->GetLength();
+ 
++
++
+         int idxStart = 0;
+         int idxEnd = len;
+ 

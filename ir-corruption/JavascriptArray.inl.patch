@@ -1,0 +1,49 @@
+diff --git a/lib/Runtime/Library/JavascriptArray.inl b/lib/Runtime/Library/JavascriptArray.inl
+index 16c9dc9..8dd0163 100644
+--- a/lib/Runtime/Library/JavascriptArray.inl
++++ b/lib/Runtime/Library/JavascriptArray.inl
+@@ -433,6 +433,44 @@ namespace Js
+         }
+     }
+ 
++	template<>
++	inline void JavascriptArray::DirectSetItemInLastUsedSegmentAt(const uint32 offset, void * const newValue)
++	{
++		SparseArraySegment<void *> *const seg = (SparseArraySegment<void *>*)GetLastUsedSegment();
++		Assert(seg);
++		Assert(offset < seg->size);
++		Assert(!(HasNoMissingValues() &&
++			offset < seg->length &&
++			SparseArraySegment<void *>::IsMissingItem(&seg->elements[offset]) &&
++			seg == head));
++
++		const bool scanForMissingValues = NeedScanForMissingValuesUponSetItem(seg, offset);
++
++		DebugOnly(VerifyNotNeedMarshal(newValue));
++		//Output::Print(_u("write to seg->elements[offset]: %p\n"), &seg->elements[offset]);
++		//Output::Print(_u("write newValue: %p\n"), newValue);
++		//Output::Flush();
++		seg->elements[offset] = newValue;
++		if (offset >= seg->length)
++		{
++			if (offset > seg->length && seg == head)
++			{
++				SetHasNoMissingValues(false);
++			}
++
++			seg->length = offset + 1;
++			const uint32 itemIndex = seg->left + offset;
++			if (this->length <= itemIndex)
++			{
++				this->length = itemIndex + 1;
++			}
++		}
++		else if (scanForMissingValues)
++		{
++			ScanForMissingValues<void *>();
++		}
++	}
++
+ #if ENABLE_PROFILE_INFO
+     template<typename T>
+     inline void JavascriptArray::DirectProfiledSetItemInHeadSegmentAt(

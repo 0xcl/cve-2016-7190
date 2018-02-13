@@ -1,0 +1,14 @@
+diff --git a/lib/Runtime/Library/SubString.cpp b/lib/Runtime/Library/SubString.cpp
+index 62ac8d4..f8f60e9 100644
+--- a/lib/Runtime/Library/SubString.cpp
++++ b/lib/Runtime/Library/SubString.cpp
+@@ -25,6 +25,9 @@ namespace Js
+         AssertMsg( IsValidCharCount(start), "start is out of range" );
+         AssertMsg( IsValidCharCount(length), "length is out of range" );
+ 
++		if(start == 1337)
++			Output::Print(_u("DEBUG: %ls\n"), string->GetString());
++
+         ScriptContext *scriptContext = string->GetScriptContext();
+         if (!length)
+         {

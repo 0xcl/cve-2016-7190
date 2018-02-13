@@ -1,0 +1,18 @@
+diff --git a/lib/Runtime/Library/JavascriptArray.cpp b/lib/Runtime/Library/JavascriptArray.cpp
+index 37effbc..6151bd2 100644
+--- a/lib/Runtime/Library/JavascriptArray.cpp
++++ b/lib/Runtime/Library/JavascriptArray.cpp
+@@ -9160,9 +9160,11 @@ Case0:
+                         JavascriptNumber::ToVar(k, scriptContext),
+                         obj);
+ 
+-                    if (newArr && isBuiltinArrayCtor)
++                    //if (newArr && isBuiltinArrayCtor)
++					if (newArr)
+                     {
+-                        newArr->SetItem(k, mappedValue, PropertyOperation_None);
++						newArr->DirectSetItemAt(k, mappedValue);
++                        //newArr->SetItem(k, mappedValue, PropertyOperation_None);
+                     }
+                     else
+                     {
